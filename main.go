@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
-	"log"
 	"net/http"
 	"strings"
 )
@@ -32,26 +31,17 @@ func stringInSlice(a string, list []string) bool {
 }
 func main() {
 
-	//	we'll first get all resouserce to determine the steady state
-	hostname := "lnx-d-dock01-20"
+	//	we'll first get all resources to determine the steady state
+	hostname := "ubuntu1"
 	base_url := "http://localhost:8080"
-	services, files := nodeSteadyState(hostname, base_url)
+	services, _ := nodeSteadyState(hostname, base_url)
 
 	for _, s := range services {
-		log.Println(s)
+		println(s)
 	}
-	for _, f := range files {
-		log.Println(f)
-	}
-
-	//	TODO add custom resource to chaosblade module (something like endpoints)
-
-	//	next step is to apply experiments
-
-	//	evaluate steady state (are our systems impacted? is everything still running correctly?)
-	//	break of experiment is steady state still ok
-	//	break of experiment
-	//	evaluate steady state
+	//for _, f := range files {
+	//	println(f)
+	//}
 }
 
 func nodeSteadyState(hostname string, base_url string) ([]string, []string) {
@@ -60,7 +50,6 @@ func nodeSteadyState(hostname string, base_url string) ([]string, []string) {
 	resources := getResourcesForNode(hostname, base_url)
 	for _, r := range resources {
 		if r.Type == "File" {
-			// TODO filter out directories
 			files = append(files, r.Title)
 		}
 		if r.Type == "Service" {
